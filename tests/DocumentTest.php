@@ -44,6 +44,7 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Aura\Di\Container', $document->di);
         $this->assertSame('tests', $document->getIndex());
         $this->assertSame('custom', $document->getType());
+        $this->assertTrue($document->isNew());
 
         return $document;
     }
@@ -59,9 +60,31 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
         // $this->assertInstanceOf('Mosiyash\ElasticSearch\QueryParams\Create', $document->queryParams);
 
         $this->assertSame(['firstname' => null, 'lastname' => null], $document->getBody());
+        $this->assertTrue($document->isNew());
 
         $document->firstname = 'John';
         $document->lastname = 'Doe';
         $this->assertSame(['firstname' => 'John', 'lastname' => 'Doe'], $document->getBody());
+        $this->assertTrue($document->isNew());
+
+        $document->id = 1;
+        $this->assertSame(['firstname' => 'John', 'lastname' => 'Doe', 'id' => 1], $document->getBody());
+        $this->assertTrue($document->isNew());
+
+        $client = $this->getMockBuilder('Elasticsearch\ClientBuilder')
+            ->setMethods(['create'])
+            ->getMock();
+
+        $client->expects($this->once())
+            ->method('create')
+            ->with($this->equalTo('{
+               "_index": "tests",
+               "_type": "custom",
+               "_id": "1",
+               "_version": 1,
+               "created": true
+            }'));
+
+        $document->save();
     }
 }

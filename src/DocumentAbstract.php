@@ -4,13 +4,13 @@ namespace Mosiyash\ElasticSearch;
 
 use Aura\Di\Container;
 use DocBlockReader\Reader;
+use Mosiyash\ElasticSearch\Exceptions\InvalidArgumentException;
 use Mosiyash\ElasticSearch\Exceptions\LogicException;
 
 /**
  * Class DocumentAbstract
  *
  * @package Mosiyash\ElasticSearch
- * @Parameter-read Container $di
  */
 abstract class DocumentAbstract implements DocumentInterface
 {
@@ -19,7 +19,16 @@ abstract class DocumentAbstract implements DocumentInterface
      */
     public $di;
 
-    public $queryParams;
+    /**
+     * @var bool
+     */
+    private $isNew = true;
+
+    /**
+     * @var string
+     * @isBodyParameter
+     */
+    public $id;
 
     /**
      * @param Container $di
@@ -31,6 +40,26 @@ abstract class DocumentAbstract implements DocumentInterface
         }
 
         $this->di = $di;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isNew()
+    {
+        return $this->isNew;
+    }
+
+    /**
+     * @param boolean $isNew
+     */
+    final private function setIsNew($isNew)
+    {
+        if (!is_bool($isNew)) {
+            throw new InvalidArgumentException('Value must be a boolen type');
+        }
+
+        $this->isNew = $isNew;
     }
 
     /**
@@ -49,6 +78,10 @@ abstract class DocumentAbstract implements DocumentInterface
             if ($isBodyParameter === true) {
                 $data[$property->getName()] = $this->{$property->getName()};
             }
+        }
+
+        if ((string) $data['id'] === '') {
+            unset($data['id']);
         }
 
         return $data;

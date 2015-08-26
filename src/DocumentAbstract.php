@@ -20,6 +20,11 @@ abstract class DocumentAbstract implements DocumentInterface
     public $di;
 
     /**
+     * @var string
+     */
+    private $clientServiceName;
+
+    /**
      * @var bool
      */
     private $isNew = true;
@@ -40,6 +45,22 @@ abstract class DocumentAbstract implements DocumentInterface
         }
 
         $this->di = $di;
+    }
+
+    /**
+     * @param string $clientServiceName
+     */
+    public function setClientServiceName($clientServiceName)
+    {
+        $this->clientServiceName = $clientServiceName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClient()
+    {
+        return $this->di->get($this->clientServiceName);
     }
 
     /**
@@ -85,5 +106,38 @@ abstract class DocumentAbstract implements DocumentInterface
         }
 
         return $data;
+    }
+
+    /**
+     * @return array
+     */
+    public function save()
+    {
+        $client = $this->getClient();
+
+        if ($this->isNew()) {
+            $params = [];
+            $body = $this->getBody();
+
+            $params['index'] = $this->getIndex();
+            $params['type'] = $this->getType();
+
+            if (array_key_exists('id', $body)) {
+                $params['id'] = $body['id'];
+                unset($body['id']);
+            }
+
+            $params['body'] = $body;
+
+            $result = $client->create($params);
+
+            if (array_key_exists('created', $result) && $result['created'] === true) {
+                $this->isNew = false;
+            }
+
+            return $result;
+        }
+
+        return [];
     }
 }

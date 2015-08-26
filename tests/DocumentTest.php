@@ -4,11 +4,17 @@ namespace Mosiyash\ElasticSearch;
 
 use Aura\Di\Container;
 use Aura\Di\Factory;
+use Elasticsearch\ClientBuilder;
 use Mosiyash\ElasticSearch\QueryParams\Create;
 use Mosiyash\ElasticSearch\Tests\CustomDocument;
 
 class DocumentTest extends \PHPUnit_Framework_TestCase
 {
+    public function setUp()
+    {
+        exec('curl -XDELETE http://localhost:9200/tests 2>/dev/null');
+    }
+
     /**
      * @param Container $di
      * @return CustomDocument
@@ -37,8 +43,12 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
     public function testNewCustomDocument()
     {
         $di = new Container(new Factory());
+        $di->set('mosiyash/elasticsearch:tests:client', function() {
+            return ClientBuilder::create()->build();
+        });
         $di->set('mosiyash/elasticsearch:tests:custom_document', $di->lazyNew('Mosiyash\ElasticSearch\Tests\CustomDocument'));
         $di->setter['Mosiyash\ElasticSearch\DocumentAbstract']['setDi'] = $di;
+        $di->setter['Mosiyash\ElasticSearch\DocumentAbstract']['setClientServiceName'] = 'mosiyash/elasticsearch:tests:client';
 
         $document = $this->newCustomDocument($di);
         $this->assertInstanceOf('Aura\Di\Container', $document->di);
@@ -55,10 +65,6 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreate(CustomDocument $document)
     {
-        // $params = new Create();
-        // $document->queryParams = $params;
-        // $this->assertInstanceOf('Mosiyash\ElasticSearch\QueryParams\Create', $document->queryParams);
-
         $this->assertSame(['firstname' => null, 'lastname' => null], $document->getBody());
         $this->assertTrue($document->isNew());
 
@@ -71,20 +77,8 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(['firstname' => 'John', 'lastname' => 'Doe', 'id' => 1], $document->getBody());
         $this->assertTrue($document->isNew());
 
-        $client = $this->getMockBuilder('Elasticsearch\ClientBuilder')
-            ->setMethods(['create'])
-            ->getMock();
-
-        $client->expects($this->once())
-            ->method('create')
-            ->with($this->equalTo('{
-               "_index": "tests",
-               "_type": "custom",
-               "_id": "1",
-               "_version": 1,
-               "created": true
-            }'));
-
-        $document->save();
+        $result = $document->save();
+        $this->assertEquals($result, ['_index' => 'tests', '_type' => 'custom', '_id' => 1, '_version' => 1, 'created' => 1]);
+        $this->assertFalse($document->isNew());
     }
 }

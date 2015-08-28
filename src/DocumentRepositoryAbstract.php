@@ -60,6 +60,7 @@ abstract class DocumentRepositoryAbstract implements DocumentRepositoryInterface
 
     /**
      * @param string $id
+     * @return null|DocumentInterface
      */
     public function findOneById($id)
     {

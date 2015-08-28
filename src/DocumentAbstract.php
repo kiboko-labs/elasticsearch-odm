@@ -160,6 +160,8 @@ abstract class DocumentAbstract implements DocumentInterface
     }
 
     /**
+     * Create or update the document.
+     *
      * @return array
      */
     public function save()

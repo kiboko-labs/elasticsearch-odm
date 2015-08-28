@@ -3,6 +3,7 @@
 namespace Mosiyash\ElasticSearch;
 
 use Aura\Di\Container;
+use Elasticsearch\Common\Exceptions\Missing404Exception;
 use Mosiyash\ElasticSearch\Exceptions\LogicException;
 
 abstract class DocumentRepositoryAbstract implements DocumentRepositoryInterface
@@ -70,10 +71,10 @@ abstract class DocumentRepositoryAbstract implements DocumentRepositoryInterface
             'id' => $id,
         ];
 
-        $result = $this->getClient()->get($params);
-
-        if (!$result) {
-            return NULL;
+        try {
+            $result = $this->getClient()->get($params);
+        } catch (Missing404Exception $e) {
+            return null;
         }
 
         $document = $this->di->newInstance($this->documentClassName);

@@ -38,5 +38,8 @@ class DocumentRepositoryTest extends TestCase
         $this->assertInstanceOf('Mosiyash\ElasticSearch\Tests\CustomDocument', $founded);
         $this->assertFalse($founded->isNew());
         $this->assertEquals($document, $founded);
+
+        $founded = $repository->findOneById('undefined');
+        $this->assertNull($founded);
     }
 }

@@ -3,6 +3,7 @@
 namespace Mosiyash\ElasticSearch;
 
 use Aura\Di\Container;
+use Codeliner\ArrayReader\ArrayReader;
 use DocBlockReader\Reader;
 use Elasticsearch\Client;
 use Mosiyash\ElasticSearch\Exceptions\InvalidArgumentException;
@@ -19,11 +20,6 @@ abstract class DocumentAbstract implements DocumentInterface
      * @var Container
      */
     public $di;
-
-    /**
-     * @var string
-     */
-    private $clientServiceName;
 
     /**
      * @var string
@@ -54,27 +50,11 @@ abstract class DocumentAbstract implements DocumentInterface
     }
 
     /**
-     * @param string $clientServiceName
-     */
-    public function setClientServiceName($clientServiceName)
-    {
-        $this->clientServiceName = $clientServiceName;
-    }
-
-    /**
      * @param string $repositoryServiceName
      */
     public function setRepositoryServiceName($repositoryServiceName)
     {
         $this->repositoryServiceName = $repositoryServiceName;
-    }
-
-    /**
-     * @return Client
-     */
-    public function getClient()
-    {
-        return $this->di->get($this->clientServiceName);
     }
 
     /**
@@ -85,11 +65,25 @@ abstract class DocumentAbstract implements DocumentInterface
         return $this->di->get($this->repositoryServiceName);
     }
 
+    /**
+     * @return Client
+     */
+    public function getClient()
+    {
+        return $this->getRepository()->getClient();
+    }
+
+    /**
+     * @return string
+     */
     public function getIndex()
     {
         return $this->getRepository()->getIndex();
     }
 
+    /**
+     * @return string
+     */
     public function getType()
     {
         return $this->getRepository()->getType();
@@ -116,6 +110,31 @@ abstract class DocumentAbstract implements DocumentInterface
     }
 
     /**
+     * @param array $result
+     */
+    public function fillThroughElasticsearchResponse(array $result)
+    {
+        $arrayReader = new ArrayReader($result);
+
+        $this->isNew = false;
+        $this->id = $arrayReader->stringValue('_id');
+
+        $class = get_class($this);
+        $reflection = new \ReflectionClass($class);
+        $properties = $reflection->getProperties();
+
+        foreach ($properties as $property) {
+            if ($property->getName() !== 'id') {
+                $reader = new Reader($class, $property->getName(), 'property');
+                $isBodyParameter = $reader->getParameter('isBodyParameter');
+                if ($isBodyParameter === true) {
+                    $this->{$property->getName()} = $arrayReader->mixedValue('_source.'.$property->getName());
+                }
+            }
+        }
+    }
+
+    /**
      * @return array
      */
     public function getBody()
@@ -138,11 +157,6 @@ abstract class DocumentAbstract implements DocumentInterface
         }
 
         return $data;
-    }
-
-    public function get()
-    {
-
     }
 
     /**

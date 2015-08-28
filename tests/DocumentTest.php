@@ -4,43 +4,14 @@ namespace Mosiyash\ElasticSearch;
 
 use Aura\Di\Container;
 use Aura\Di\Factory;
-use Elasticsearch\ClientBuilder;
-use Mosiyash\ElasticSearch\QueryParams\Create;
 use Mosiyash\ElasticSearch\Tests\CustomDocument;
-use Mosiyash\ElasticSearch\Tests\CustomDocumentRepository;
 
-class DocumentTest extends \PHPUnit_Framework_TestCase
+class DocumentTest extends TestCase
 {
-    /**
-     * @var Container
-     */
-    private $di;
-
-    public function setUp()
-    {
-        exec('curl -XDELETE http://localhost:9200/tests 2>/dev/null');
-
-        $this->di = new Container(new Factory());
-        $this->di->set('tests/elasticsearch:client', function() { return ClientBuilder::create()->build(); });
-
-        $this->di->set('tests/documents:custom', $this->di->lazyNew('Mosiyash\ElasticSearch\Tests\CustomDocument'));
-        $this->di->setter['Mosiyash\ElasticSearch\Tests\CustomDocument']['setRepositoryServiceName'] = 'tests/repositories:custom';
-
-        $this->di->set('tests/repositories:custom', $this->di->lazyNew('Mosiyash\ElasticSearch\Tests\CustomDocumentRepository'));
-
-        $this->di->setter['Mosiyash\ElasticSearch\DocumentAbstract']['setDi'] = $this->di;
-        $this->di->setter['Mosiyash\ElasticSearch\DocumentAbstract']['setClientServiceName'] = 'tests/elasticsearch:client';
-    }
-
-    public function tearDown()
-    {
-        exec('curl -XDELETE http://localhost:9200/tests 2>/dev/null');
-    }
-
     /**
      * @return CustomDocument
      */
-    final protected function newCustomDocument()
+    protected function newCustomDocument()
     {
         $document = $this->di->get('tests/documents:custom');
 
@@ -111,14 +82,5 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($result['_id'], $document->id);
 
         return $document;
-    }
-
-    /**
-     * @param CustomDocument $document
-     * @depends testCreateWithAutoId
-     */
-    public function testGet(CustomDocument $document)
-    {
-        $repository = new CustomDocumentRepository();
     }
 }

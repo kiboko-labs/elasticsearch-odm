@@ -63,7 +63,7 @@ abstract class DocumentRepositoryAbstract implements DocumentRepositoryInterface
      * @param string $id
      * @return null|DocumentInterface
      */
-    public function findOneById($id)
+    public function find($id)
     {
         $params = [
             'index' => $this->getIndex(),
@@ -81,5 +81,17 @@ abstract class DocumentRepositoryAbstract implements DocumentRepositoryInterface
         $document->fillThroughElasticsearchResponse($result);
 
         return $document;
+    }
+
+    public function findBy(array $body)
+    {
+        $params = [
+            'index' => $this->getIndex(),
+            'type' => $this->getType(),
+            'body' => $body,
+        ];
+
+        $result = $this->getClient()->search($params);
+        exit(print_r($result));
     }
 }

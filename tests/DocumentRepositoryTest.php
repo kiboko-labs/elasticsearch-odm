@@ -29,17 +29,28 @@ class DocumentRepositoryTest extends TestCase
         return $this->di->get('tests/repositories:custom');
     }
 
-    public function testFindById()
+    public function testFind()
     {
         $document = $this->newCustomDocument();
         $repository = $this->getCustomDocumentRepository();
 
-        $founded = $repository->findOneById('xyz');
-        $this->assertInstanceOf('Mosiyash\ElasticSearch\Tests\CustomDocument', $founded);
-        $this->assertFalse($founded->isNew());
-        $this->assertEquals($document, $founded);
+        $result = $repository->find('xyz');
+        $this->assertInstanceOf('Mosiyash\ElasticSearch\Tests\CustomDocument', $result);
+        $this->assertFalse($result->isNew());
+        $this->assertEquals($document, $result);
 
-        $founded = $repository->findOneById('undefined');
-        $this->assertNull($founded);
+        $result = $repository->find('undefined');
+        $this->assertNull($result);
+    }
+
+    public function testFineBy()
+    {
+        $documents = [$this->newCustomDocument()];
+        $repository = $this->getCustomDocumentRepository();
+
+        $result = $repository->findBy([
+            'query' => ['match' => ['firstname' => 'John']],
+        ]);
+        print_r($result);
     }
 }

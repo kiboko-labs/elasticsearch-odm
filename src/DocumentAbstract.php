@@ -4,6 +4,7 @@ namespace Mosiyash\ElasticSearch;
 
 use Aura\Di\Container;
 use DocBlockReader\Reader;
+use Elasticsearch\Client;
 use Mosiyash\ElasticSearch\Exceptions\InvalidArgumentException;
 use Mosiyash\ElasticSearch\Exceptions\LogicException;
 
@@ -23,6 +24,11 @@ abstract class DocumentAbstract implements DocumentInterface
      * @var string
      */
     private $clientServiceName;
+
+    /**
+     * @var string
+     */
+    private $repositoryServiceName;
 
     /**
      * @var bool
@@ -56,11 +62,37 @@ abstract class DocumentAbstract implements DocumentInterface
     }
 
     /**
-     * @return mixed
+     * @param string $repositoryServiceName
+     */
+    public function setRepositoryServiceName($repositoryServiceName)
+    {
+        $this->repositoryServiceName = $repositoryServiceName;
+    }
+
+    /**
+     * @return Client
      */
     public function getClient()
     {
         return $this->di->get($this->clientServiceName);
+    }
+
+    /**
+     * @return DocumentRepositoryInterface
+     */
+    public function getRepository()
+    {
+        return $this->di->get($this->repositoryServiceName);
+    }
+
+    public function getIndex()
+    {
+        return $this->getRepository()->getIndex();
+    }
+
+    public function getType()
+    {
+        return $this->getRepository()->getType();
     }
 
     /**
@@ -106,6 +138,11 @@ abstract class DocumentAbstract implements DocumentInterface
         }
 
         return $data;
+    }
+
+    public function get()
+    {
+
     }
 
     /**

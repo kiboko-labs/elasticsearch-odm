@@ -17,14 +17,4 @@ class CustomDocument extends DocumentAbstract
      * @isBodyParameter
      */
     public $lastname;
-
-    public function getIndex()
-    {
-        return 'tests';
-    }
-
-    public function getType()
-    {
-        return 'custom';
-    }
 }

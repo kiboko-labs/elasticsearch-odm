@@ -133,6 +133,7 @@ abstract class DocumentAbstract implements DocumentInterface
 
             if (array_key_exists('created', $result) && $result['created'] === true) {
                 $this->isNew = false;
+                $this->id = $result['_id'];
             }
 
             return $result;

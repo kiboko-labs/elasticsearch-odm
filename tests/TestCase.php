@@ -30,6 +30,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
         $this->di->setter['Mosiyash\ElasticSearch\DocumentRepositoryAbstract']['setClientServiceName'] = 'tests/elasticsearch:client';
         $this->di->setter['Mosiyash\ElasticSearch\DocumentRepositoryAbstract']['setDocumentClassName'] = 'Mosiyash\ElasticSearch\Tests\CustomDocument';
 
+        $this->checkElasticSearchIsRunned();
         $this->deleteElasticSearchIndex();
         $this->createElasticSearchIndex();
     }
@@ -39,7 +40,28 @@ class TestCase extends \PHPUnit_Framework_TestCase
         $this->deleteElasticSearchIndex();
     }
 
-    public function deleteElasticSearchIndex()
+    protected function checkElasticSearchIsRunned()
+    {
+        $osname = strtolower(php_uname('s'));
+
+        if ($osname === 'windows') {
+            $cmd = 'tasklist | find "elasticsearch"';
+        } else {
+            $cmd = 'ps aux | grep elasticsearch';
+        }
+
+        $process = new Process($cmd);
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+            throw new \RuntimeException($process->getErrorOutput());
+        }
+
+        $output = $process->getOutput();
+        $this->assertRegExp('/java.+elasticsearch/i', $output);
+    }
+
+    protected function deleteElasticSearchIndex()
     {
         $params = ['index' => 'tests'];
 
@@ -51,7 +73,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function createElasticSearchIndex()
+    protected function createElasticSearchIndex()
     {
         $params = [
             'index' => 'tests',

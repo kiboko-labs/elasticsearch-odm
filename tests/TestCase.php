@@ -4,8 +4,11 @@ namespace Mosiyash\ElasticSearch;
 
 use Aura\Di\Container;
 use Aura\Di\Factory;
+use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 use Elasticsearch\Common\Exceptions\Missing404Exception;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use Symfony\Component\Process\Process;
 
 class TestCase extends \PHPUnit_Framework_TestCase
@@ -18,7 +21,15 @@ class TestCase extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->di = new Container(new Factory());
-        $this->di->set('tests/elasticsearch:client', function() { return ClientBuilder::create()->build(); });
+        $this->di->set('tests/elasticsearch:client', function() {
+            $logger = new Logger('tests');
+            $logger->pushHandler(new StreamHandler(dirname(__DIR__).'/tmp/log/tests.log'), Logger::DEBUG);
+
+            $client = ClientBuilder::create();
+            $client->setLogger($logger);
+
+            return $client->build();
+        });
 
         $this->di->set('tests/documents:custom', $this->di->lazyNew('Mosiyash\ElasticSearch\Tests\CustomDocument'));
         $this->di->setter['Mosiyash\ElasticSearch\Tests\CustomDocument']['setRepositoryServiceName'] = 'tests/repositories:custom';

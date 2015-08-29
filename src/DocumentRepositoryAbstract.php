@@ -83,7 +83,7 @@ abstract class DocumentRepositoryAbstract implements DocumentRepositoryInterface
         return $document;
     }
 
-    public function findBy(array $body)
+    public function findBy($body)
     {
         $params = [
             'index' => $this->getIndex(),
@@ -92,6 +92,7 @@ abstract class DocumentRepositoryAbstract implements DocumentRepositoryInterface
         ];
 
         $result = $this->getClient()->search($params);
-        exit(print_r($result));
+
+        return $result;
     }
 }

@@ -43,14 +43,13 @@ class DocumentRepositoryTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function testFineBy()
+    public function testFindBy()
     {
         $documents = [$this->newCustomDocument()];
         $repository = $this->getCustomDocumentRepository();
 
-        $result = $repository->findBy([
-            'query' => ['match' => ['firstname' => 'John']],
-        ]);
-        print_r($result);
+        $result = $repository->findBy(['query' => ['match' => ['lastname' => 'Doe']]]);
+        exit(print_r($result));
+        //$this->assertEquals($documents, $result);
     }
 }

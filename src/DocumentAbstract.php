@@ -9,6 +9,7 @@ use Elasticsearch\Client;
 use Mosiyash\ElasticSearch\Exceptions\InvalidArgumentException;
 use Mosiyash\ElasticSearch\Exceptions\LogicException;
 use Mosiyash\ElasticSearch\QueryParams\Create;
+use Mosiyash\ElasticSearch\QueryParams\Delete;
 use Mosiyash\ElasticSearch\QueryParams\Update;
 
 /**
@@ -183,13 +184,25 @@ abstract class DocumentAbstract implements DocumentInterface
             }
 
             return $result;
+        } else {
+            $params = new Update($this);
+            $params->body['doc'] = $this->getBody();
+
+            $result = $client->update($params->asArray());
+            $this->version = $result['_version'];
+
+            return $result;
         }
+    }
 
-        $params = new Update($this);
-        $params->body['doc'] = $this->getBody();
-
-        $result = $client->update($params->asArray());
-        $this->version = $result['_version'];
+    /**
+     * @return array
+     */
+    public function delete()
+    {
+        $client = $this->getClient();
+        $params = new Delete($this);
+        $result = $client->delete($params->asArray());
 
         return $result;
     }

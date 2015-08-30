@@ -31,9 +31,6 @@ class DocumentTest extends TestCase
         $document->setDi(new Container(new Factory()));
     }
 
-    /**
-     * @return CustomDocument
-     */
     public function testNewCustomDocument()
     {
         $document = $this->newCustomDocument();
@@ -64,9 +61,6 @@ class DocumentTest extends TestCase
         $this->assertFalse($document->isNew());
     }
 
-    /**
-     * return CustomDocument
-     */
     public function testCreateWithAutoId()
     {
         $document = $this->newCustomDocument();
@@ -92,5 +86,18 @@ class DocumentTest extends TestCase
         $document->save();
         $this->assertSame(2, $document->version);
         $this->assertEquals(['firstname' => 'John', 'lastname' => 'Doe'], $document->getBody());
+    }
+
+    public function testDelete()
+    {
+        $document = $this->newCustomDocument();
+        $document->firstname = 'John';
+        $document->save();
+        $this->assertSame(1, $document->version);
+
+        $document->delete();
+
+        $this->setExpectedException('Elasticsearch\Common\Exceptions\Missing404Exception');
+        $document->save();
     }
 }

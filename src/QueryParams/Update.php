@@ -4,7 +4,7 @@ namespace Mosiyash\ElasticSearch\QueryParams;
 use Mosiyash\ElasticSearch\QueryParamsAbstract;
 
 /**
- * Class Create
+ * Class Update
  *
  * TODO: add consistency property (https://www.elastic.co/search?q=consistency)
  * TODO: add perlocator property (https://www.elastic.co/guide/en/elasticsearch/reference/current/search-percolate.html)

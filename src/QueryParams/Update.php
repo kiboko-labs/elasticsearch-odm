@@ -1,7 +1,7 @@
 <?php
 
 namespace Mosiyash\ElasticSearch\QueryParams;
-use Mosiyash\ElasticSearch\QueryParamsAbstract;
+use Mosiyash\ElasticSearch\QueryParamsDocumentAbstract;
 
 /**
  * Class Update
@@ -14,16 +14,8 @@ use Mosiyash\ElasticSearch\QueryParamsAbstract;
  *
  * @package Mosiyash\ElasticSearch\QueryParams
  */
-class Update extends QueryParamsAbstract
+class Update extends QueryParamsDocumentAbstract
 {
-    /**
-     * Specific document ID (when the POST method is used)
-     *
-     * @var string
-     * @isQueryParameter
-     */
-    public $id;
-
     /**
      * A comma-separated list of fields to return in the response
      *
@@ -41,43 +33,11 @@ class Update extends QueryParamsAbstract
     public $lang = 'mvel';
 
     /**
-     * ID of the parent document
-     *
-     * @var string
-     * @isQueryParameter
-     */
-    public $parent;
-
-    /**
-     * Refresh the index after performing the operation
-     *
-     * @var boolean
-     * @isQueryParameter
-     */
-    public $refresh;
-
-    /**
-     * Specific routing value
-     *
-     * @var string
-     * @isQueryParameter
-     */
-    public $routing;
-
-    /**
      * The URL-encoded script definition (instead of using request body)
      *
      * @var string
      */
     public $script;
-
-    /**
-     * Explicit operation timeout
-     *
-     * @var integer
-     * @isQueryParameter
-     */
-    public $timeout;
 
     /**
      * Explicit timestamp for the document

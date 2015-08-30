@@ -4,38 +4,8 @@ namespace Mosiyash\ElasticSearch;
 
 use DocBlockReader\Reader;
 
-abstract class QueryParamsAbstract
+trait QueryParamsTrait
 {
-    private $document;
-
-    /**
-     * @var string
-     * @isQueryParameter
-     */
-    protected $index;
-
-    /**
-     * @var string
-     * @isQueryParameter
-     */
-    protected $type;
-
-    /**
-     * @return DocumentInterface
-     */
-    public function getDocument()
-    {
-        return $this->document;
-    }
-
-    public function __construct(DocumentInterface $document)
-    {
-        $this->document = $document;
-        $this->index = $document->getIndex();
-        $this->type = $document->getType();
-        $this->id = $document->id;
-    }
-
     public function asArray()
     {
         $data = [];

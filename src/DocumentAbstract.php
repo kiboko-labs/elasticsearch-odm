@@ -9,6 +9,7 @@ use Elasticsearch\Client;
 use Mosiyash\ElasticSearch\Exceptions\InvalidArgumentException;
 use Mosiyash\ElasticSearch\Exceptions\LogicException;
 use Mosiyash\ElasticSearch\QueryParams\Create;
+use Mosiyash\ElasticSearch\QueryParams\Update;
 
 /**
  * Class DocumentAbstract
@@ -36,6 +37,11 @@ abstract class DocumentAbstract implements DocumentInterface
      * @var string
      */
     public $id;
+
+    /**
+     * @var integer
+     */
+    public $version;
 
     /**
      * @param Container $di
@@ -166,7 +172,6 @@ abstract class DocumentAbstract implements DocumentInterface
 
         if ($this->isNew()) {
             $params = new Create($this);
-            $params->id = $this->id;
             $params->body = $this->getBody();
 
             $result = $client->create($params->asArray());
@@ -174,11 +179,18 @@ abstract class DocumentAbstract implements DocumentInterface
             if (array_key_exists('created', $result) && $result['created'] === true) {
                 $this->isNew = false;
                 $this->id = $result['_id'];
+                $this->version = $result['_version'];
             }
 
             return $result;
         }
 
-        return [];
+        $params = new Update($this);
+        $params->body['doc'] = $this->getBody();
+
+        $result = $client->update($params->asArray());
+        $this->version = $result['_version'];
+
+        return $result;
     }
 }

@@ -41,8 +41,6 @@ class DocumentTest extends TestCase
         $this->assertSame('tests', $document->getIndex());
         $this->assertSame('custom', $document->getType());
         $this->assertTrue($document->isNew());
-
-        return $document;
     }
 
     public function testCreate()
@@ -78,9 +76,21 @@ class DocumentTest extends TestCase
         $result = $document->save();
         $this->assertEquals($result, ['_index' => 'tests', '_type' => 'custom', '_id' => $result['_id'], '_version' => 1, 'created' => 1]);
         $this->assertFalse($document->isNew());
-        $this->assertSame(['firstname' => 'John', 'lastname' => null], $document->getBody());
+        $this->assertSame(1, $document->version);
         $this->assertSame($result['_id'], $document->id);
+        $this->assertSame(['firstname' => 'John', 'lastname' => null], $document->getBody());
+    }
 
-        return $document;
+    public function testUpdate()
+    {
+        $document = $this->newCustomDocument();
+        $document->firstname = 'John';
+        $document->save();
+        $this->assertSame(1, $document->version);
+
+        $document->lastname = 'Doe';
+        $document->save();
+        $this->assertSame(2, $document->version);
+        $this->assertEquals(['firstname' => 'John', 'lastname' => 'Doe'], $document->getBody());
     }
 }

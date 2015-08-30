@@ -33,6 +33,7 @@ abstract class QueryParamsAbstract
         $this->document = $document;
         $this->index = $document->getIndex();
         $this->type = $document->getType();
+        $this->id = $document->id;
     }
 
     public function asArray()

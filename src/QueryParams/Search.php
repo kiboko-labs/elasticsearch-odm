@@ -2,9 +2,7 @@
 
 namespace Mosiyash\ElasticSearch\QueryParams;
 
-use Mosiyash\ElasticSearch\QueryParamsAbstract;
+use Mosiyash\ElasticSearch\QueryParamsSearchAbstract;
 
-class Search extends QueryParamsAbstract:
-{
-
-}
+class Search extends QueryParamsSearchAbstract
+{}

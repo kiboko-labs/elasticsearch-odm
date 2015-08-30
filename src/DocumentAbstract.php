@@ -125,6 +125,7 @@ abstract class DocumentAbstract implements DocumentInterface
 
         $this->isNew = false;
         $this->id = $arrayReader->stringValue('_id');
+        $this->version = $arrayReader->stringValue('_version');
 
         $class = get_class($this);
         $reflection = new \ReflectionClass($class);

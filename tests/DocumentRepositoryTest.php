@@ -43,7 +43,7 @@ class DocumentRepositoryTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function testFindBy()
+    /*public function testFindBy()
     {
         $documents = [$this->newCustomDocument()];
         $repository = $this->getCustomDocumentRepository();
@@ -51,5 +51,5 @@ class DocumentRepositoryTest extends TestCase
         $result = $repository->findBy(['query' => ['match' => ['lastname' => 'Doe']]]);
         exit(print_r($result));
         //$this->assertEquals($documents, $result);
-    }
+    }*/
 }

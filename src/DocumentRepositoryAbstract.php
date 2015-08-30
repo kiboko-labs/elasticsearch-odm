@@ -5,6 +5,7 @@ namespace Mosiyash\ElasticSearch;
 use Aura\Di\Container;
 use Elasticsearch\Common\Exceptions\Missing404Exception;
 use Mosiyash\ElasticSearch\Exceptions\LogicException;
+use Mosiyash\ElasticSearch\QueryParams\Search;
 
 abstract class DocumentRepositoryAbstract implements DocumentRepositoryInterface
 {
@@ -83,15 +84,9 @@ abstract class DocumentRepositoryAbstract implements DocumentRepositoryInterface
         return $document;
     }
 
-    public function findBy($body)
+    public function findBy(Search $params)
     {
-        $params = [
-            'index' => $this->getIndex(),
-            'type' => $this->getType(),
-            'body' => $body,
-        ];
-
-        $result = $this->getClient()->search($params);
+        $result = $this->getClient()->search($params->asArray());
 
         return $result;
     }

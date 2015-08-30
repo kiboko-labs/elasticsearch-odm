@@ -2,6 +2,7 @@
 
 namespace Mosiyash\ElasticSearch;
 
+use Mosiyash\ElasticSearch\QueryParams\Search;
 use Mosiyash\ElasticSearch\Tests\CustomDocumentRepository;
 
 class DocumentRepositoryTest extends TestCase
@@ -43,13 +44,15 @@ class DocumentRepositoryTest extends TestCase
         $this->assertNull($result);
     }
 
-    /*public function testFindBy()
+    public function testFindBy()
     {
         $documents = [$this->newCustomDocument()];
         $repository = $this->getCustomDocumentRepository();
 
-        $result = $repository->findBy(['query' => ['match' => ['lastname' => 'Doe']]]);
-        exit(print_r($result));
-        //$this->assertEquals($documents, $result);
-    }*/
+        $params = new Search($repository);
+        $params->body = ['query' => ['match' => ['firstname' => 'John']]];
+
+        $result = $repository->findBy($params);
+        $this->assertEquals($documents, $result);
+    }
 }

@@ -4,7 +4,6 @@ namespace Mosiyash\ElasticSearch;
 
 use Aura\Di\Container;
 use Aura\Di\Factory;
-use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 use Elasticsearch\Common\Exceptions\Missing404Exception;
 use Monolog\Handler\StreamHandler;

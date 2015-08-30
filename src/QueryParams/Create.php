@@ -1,6 +1,7 @@
 <?php
 
 namespace Mosiyash\ElasticSearch\QueryParams;
+use Mosiyash\ElasticSearch\QueryParamsAbstract;
 
 /**
  * Class Create
@@ -12,12 +13,13 @@ namespace Mosiyash\ElasticSearch\QueryParams;
  *
  * @package Mosiyash\ElasticSearch\QueryParams
  */
-class Create
+class Create extends QueryParamsAbstract
 {
     /**
      * Specific document ID (when the POST method is used)
      *
      * @var string
+     * @isQueryParameter
      */
     public $id;
 
@@ -25,6 +27,7 @@ class Create
      * ID of the parent document
      *
      * @var string
+     * @isQueryParameter
      */
     public $parent;
 
@@ -32,6 +35,7 @@ class Create
      * Refresh the index after performing the operation
      *
      * @var boolean
+     * @isQueryParameter
      */
     public $refresh;
 
@@ -39,6 +43,7 @@ class Create
      * Specific routing value
      *
      * @var string
+     * @isQueryParameter
      */
     public $routing;
 
@@ -46,6 +51,7 @@ class Create
      * Explicit operation timeout
      *
      * @var integer
+     * @isQueryParameter
      */
     public $timeout;
 
@@ -53,6 +59,7 @@ class Create
      * Explicit timestamp for the document
      *
      * @var integer
+     * @isQueryParameter
      */
     public $timestamp;
 
@@ -60,6 +67,7 @@ class Create
      * Expiration time for the document
      *
      * @var integer
+     * @isQueryParameter
      */
     public $ttl;
 
@@ -67,6 +75,7 @@ class Create
      * Explicit version number for concurrency control
      *
      * @var integer
+     * @isQueryParameter
      */
     public $version;
 
@@ -74,6 +83,7 @@ class Create
      * The document
      *
      * @var array
+     * @isQueryParameter
      */
     public $body = [];
 }

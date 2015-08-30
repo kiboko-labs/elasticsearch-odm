@@ -8,6 +8,7 @@ use DocBlockReader\Reader;
 use Elasticsearch\Client;
 use Mosiyash\ElasticSearch\Exceptions\InvalidArgumentException;
 use Mosiyash\ElasticSearch\Exceptions\LogicException;
+use Mosiyash\ElasticSearch\QueryParams\Create;
 
 /**
  * Class DocumentAbstract
@@ -33,7 +34,6 @@ abstract class DocumentAbstract implements DocumentInterface
 
     /**
      * @var string
-     * @isBodyParameter
      */
     public $id;
 
@@ -152,10 +152,6 @@ abstract class DocumentAbstract implements DocumentInterface
             }
         }
 
-        if ((string) $data['id'] === '') {
-            unset($data['id']);
-        }
-
         return $data;
     }
 
@@ -169,20 +165,11 @@ abstract class DocumentAbstract implements DocumentInterface
         $client = $this->getClient();
 
         if ($this->isNew()) {
-            $params = [];
-            $body = $this->getBody();
+            $params = new Create($this);
+            $params->id = $this->id;
+            $params->body = $this->getBody();
 
-            $params['index'] = $this->getIndex();
-            $params['type'] = $this->getType();
-
-            if (array_key_exists('id', $body)) {
-                $params['id'] = $body['id'];
-                unset($body['id']);
-            }
-
-            $params['body'] = $body;
-
-            $result = $client->create($params);
+            $result = $client->create($params->asArray());
 
             if (array_key_exists('created', $result) && $result['created'] === true) {
                 $this->isNew = false;

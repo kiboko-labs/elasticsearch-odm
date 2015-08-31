@@ -6,6 +6,7 @@ use Aura\Di\Container;
 use Aura\Di\Factory;
 use Elasticsearch\ClientBuilder;
 use Elasticsearch\Common\Exceptions\Missing404Exception;
+use Elasticsearch\ConnectionPool\SniffingConnectionPool;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Symfony\Component\Process\Process;
@@ -108,5 +109,31 @@ class TestCase extends \PHPUnit_Framework_TestCase
 
         $response = $this->di->get('tests/elasticsearch:client')->indices()->create($params);
         $this->assertTrue($response['acknowledged']);
+    }
+
+    public function assertPromise($expected, callable $do, callable $resolver, $timeout = 5)
+    {
+        $start = microtime(true);
+        $runned = true;
+
+        while ($runned) {
+            $actual = call_user_func($do);
+            $fail = false;
+
+            try {
+                call_user_func_array($resolver, [$expected, $actual]);
+                $runned = false;
+            } catch (\PHPUnit_Framework_ExpectationFailedException $e) {
+                $passed = microtime(true) - $start;
+
+                if ($passed >= $timeout) {
+                    $fail = true;
+                }
+            }
+
+            if ($fail) {
+                throw new \PHPUnit_Framework_ExpectationFailedException($e->getMessage(), $e->getComparisonFailure(), $e->getPrevious());
+            }
+        }
     }
 }

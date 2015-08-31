@@ -2,7 +2,12 @@
 
 namespace Mosiyash\ElasticSearch;
 
+use Mosiyash\ElasticSearch\QueryParams\Search;
 use Mosiyash\ElasticSearch\Tests\CustomDocumentRepository;
+use React\EventLoop\StreamSelectLoop;
+use React\Promise\Promise;
+use React\Promise\Timer;
+use React\Promise\Deferred;
 
 class DocumentRepositoryTest extends TestCase
 {
@@ -45,13 +50,22 @@ class DocumentRepositoryTest extends TestCase
 
     public function testFindBy()
     {
-        $documents = [$this->newCustomDocument()];
-        $repository = $this->getCustomDocumentRepository();
+        $document = $this->newCustomDocument();
+        $document->version = null;
+        $documents = [$document];
 
-        $params = new Search($repository);
-        $params->body = ['query' => ['match' => ['firstname' => 'John']]];
-
-        $result = $repository->findBy($params);
-        $this->assertEquals($documents, $result);
+        $this->assertPromise(
+            $documents,
+            function() {
+                $repository = $this->getCustomDocumentRepository();
+                $params = new Search($repository);
+                $params->body = ['query' => ['match' => ['firstname' => 'John']]];
+                $result = $repository->findBy($params);
+                return $result;
+            },
+            function($expected, $actual) {
+                $this->assertEquals($expected, $actual);
+            }
+        );
     }
 }

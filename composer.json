@@ -23,6 +23,8 @@
   },
   "require-dev": {
     "monolog/monolog": "*",
+    "phpunit/php-invoker": "^1.0",
+    "react/promise-timer": "dev-master",
     "symfony/process": ">=2"
   },
   "autoload": {

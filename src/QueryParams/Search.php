@@ -26,7 +26,7 @@ use Mosiyash\ElasticSearch\QueryParamsTrait;
  * TODO: add suggestSize property
  * TODO: add suggestText property
  *
- * @package Mosiyash\ElasticSearch
+ * @package Mosiyash\ElasticSearch\QueryParams
  */
 class Search
 {

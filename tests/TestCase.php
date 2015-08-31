@@ -117,11 +117,11 @@ class TestCase extends \PHPUnit_Framework_TestCase
         $runned = true;
 
         while ($runned) {
-            $actual = call_user_func($actual);
+            $actualValue = call_user_func($actual);
             $fail = false;
 
             try {
-                call_user_func_array($resolver, [$expected, $actual]);
+                call_user_func_array($resolver, [$expected, $actualValue]);
                 $runned = false;
             } catch (\PHPUnit_Framework_ExpectationFailedException $e) {
                 $passed = microtime(true) - $start;

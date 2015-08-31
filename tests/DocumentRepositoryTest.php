@@ -52,20 +52,18 @@ class DocumentRepositoryTest extends TestCase
     {
         $document = $this->newCustomDocument();
         $document->version = null;
-        $documents = [$document];
 
-        $this->assertPromise(
-            $documents,
-            function() {
-                $repository = $this->getCustomDocumentRepository();
-                $params = new Search($repository);
-                $params->body = ['query' => ['match' => ['firstname' => 'John']]];
-                $result = $repository->findBy($params);
-                return $result;
-            },
-            function($expected, $actual) {
-                $this->assertEquals($expected, $actual);
-            }
-        );
+        $expected = [$document];
+        $actual = function() {
+            $repository = $this->getCustomDocumentRepository();
+            $params = new Search($repository);
+            $params->body = ['query' => ['match' => ['firstname' => 'John']]];
+            $result = $repository->findBy($params);
+            return $result;
+        };
+        $resolver = function($expected, $actual) {
+            $this->assertEquals($expected, $actual);
+        };
+        $this->assertPromise($expected, $actual, $resolver);
     }
 }

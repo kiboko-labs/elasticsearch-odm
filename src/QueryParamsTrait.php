@@ -3,6 +3,7 @@
 namespace Mosiyash\ElasticSearch;
 
 use DocBlockReader\Reader;
+use Doctrine\Common\Inflector\Inflector;
 
 trait QueryParamsTrait
 {
@@ -16,8 +17,9 @@ trait QueryParamsTrait
         foreach ($properties as $property) {
             $reader = new Reader($class, $property->getName(), 'property');
             $isQueryParameter = $reader->getParameter('isQueryParameter');
+            $propertyName = Inflector::tableize($property->getName());
             if ($isQueryParameter === true && $this->{$property->getName()} !== null) {
-                $data[$property->getName()] = $this->{$property->getName()};
+                $data[$propertyName] = $this->{$property->getName()};
             }
         }
 

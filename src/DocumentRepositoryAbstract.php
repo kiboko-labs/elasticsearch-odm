@@ -84,10 +84,21 @@ abstract class DocumentRepositoryAbstract implements DocumentRepositoryInterface
         return $document;
     }
 
+    /**
+     * @param Search $params
+     * @return array
+     */
     public function findBy(Search $params)
     {
+        $data = [];
         $result = $this->getClient()->search($params->asArray());
 
-        return $result;
+        foreach ($result['hits']['hits'] as $hit) {
+            $document = $this->di->newInstance($this->documentClassName);
+            $document->fillThroughElasticsearchResponse($hit);
+            $data[] = $document;
+        }
+
+        return $data;
     }
 }

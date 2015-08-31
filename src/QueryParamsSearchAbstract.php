@@ -13,7 +13,6 @@ namespace Mosiyash\ElasticSearch;
  * TODO: add q property
  * TODO: add routing property
  * TODO: add scroll property
- * TODO: add searchType property
  * TODO: add source property
  * TODO: add _source property
  * TODO: add _sourceExclude property
@@ -102,6 +101,14 @@ abstract class QueryParamsSearchAbstract
      * @isQueryParameter
      */
     public $from;
+
+    /**
+     * Search operation type (default: query_then_fetch)
+     *
+     * @var string
+     * @isQueryParameter
+     */
+    public $searchType;
 
     /**
      * Number of hits to return (default: 10)

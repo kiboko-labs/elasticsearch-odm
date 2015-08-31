@@ -31,9 +31,6 @@ class DocumentTest extends TestCase
         $document->setDi(new Container(new Factory()));
     }
 
-    /**
-     * @return CustomDocument
-     */
     public function testNewCustomDocument()
     {
         $document = $this->newCustomDocument();
@@ -41,8 +38,6 @@ class DocumentTest extends TestCase
         $this->assertSame('tests', $document->getIndex());
         $this->assertSame('custom', $document->getType());
         $this->assertTrue($document->isNew());
-
-        return $document;
     }
 
     public function testCreate()
@@ -58,7 +53,7 @@ class DocumentTest extends TestCase
         $this->assertTrue($document->isNew());
 
         $document->id = 1;
-        $this->assertSame(['firstname' => 'John', 'lastname' => 'Doe', 'id' => 1], $document->getBody());
+        $this->assertSame(['firstname' => 'John', 'lastname' => 'Doe'], $document->getBody());
         $this->assertTrue($document->isNew());
 
         $result = $document->save();
@@ -66,9 +61,6 @@ class DocumentTest extends TestCase
         $this->assertFalse($document->isNew());
     }
 
-    /**
-     * return CustomDocument
-     */
     public function testCreateWithAutoId()
     {
         $document = $this->newCustomDocument();
@@ -78,9 +70,34 @@ class DocumentTest extends TestCase
         $result = $document->save();
         $this->assertEquals($result, ['_index' => 'tests', '_type' => 'custom', '_id' => $result['_id'], '_version' => 1, 'created' => 1]);
         $this->assertFalse($document->isNew());
-        $this->assertSame(['firstname' => 'John', 'lastname' => null, 'id' => $result['_id']], $document->getBody());
+        $this->assertSame(1, $document->version);
         $this->assertSame($result['_id'], $document->id);
+        $this->assertSame(['firstname' => 'John', 'lastname' => null], $document->getBody());
+    }
 
-        return $document;
+    public function testUpdate()
+    {
+        $document = $this->newCustomDocument();
+        $document->firstname = 'John';
+        $document->save();
+        $this->assertSame(1, $document->version);
+
+        $document->lastname = 'Doe';
+        $document->save();
+        $this->assertSame(2, $document->version);
+        $this->assertEquals(['firstname' => 'John', 'lastname' => 'Doe'], $document->getBody());
+    }
+
+    public function testDelete()
+    {
+        $document = $this->newCustomDocument();
+        $document->firstname = 'John';
+        $document->save();
+        $this->assertSame(1, $document->version);
+
+        $document->delete();
+
+        $this->setExpectedException('Elasticsearch\Common\Exceptions\Missing404Exception');
+        $document->save();
     }
 }

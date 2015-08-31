@@ -48,7 +48,10 @@ class DocumentRepositoryTest extends TestCase
         $documents = [$this->newCustomDocument()];
         $repository = $this->getCustomDocumentRepository();
 
-        $result = $repository->findBy(['query' => ['match' => ['firstname' => 'John']]]);
+        $params = new Search($repository);
+        $params->body = ['query' => ['match' => ['firstname' => 'John']]];
+
+        $result = $repository->findBy($params);
         $this->assertEquals($documents, $result);
     }
 }

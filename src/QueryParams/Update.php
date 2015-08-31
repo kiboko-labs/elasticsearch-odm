@@ -4,17 +4,41 @@ namespace Mosiyash\ElasticSearch\QueryParams;
 use Mosiyash\ElasticSearch\QueryParamsDocumentAbstract;
 
 /**
- * Class Create
+ * Class Update
  *
  * TODO: add consistency property (https://www.elastic.co/search?q=consistency)
  * TODO: add perlocator property (https://www.elastic.co/guide/en/elasticsearch/reference/current/search-percolate.html)
  * TODO: add replication property (specific replication type)
  * TODO: add versionType property (specific version type)
+ * TODO: add retryOnConflict property (specify how many times should the operation be retried when a conflict occurs)
  *
  * @package Mosiyash\ElasticSearch\QueryParams
  */
-class Create extends QueryParamsDocumentAbstract
+class Update extends QueryParamsDocumentAbstract
 {
+    /**
+     * A comma-separated list of fields to return in the response
+     *
+     * @var string
+     * @isQueryParameter
+     */
+    public $fields;
+
+    /**
+     * The script language (default: mvel)
+     *
+     * @var string
+     * @isQueryParameter
+     */
+    public $lang = 'mvel';
+
+    /**
+     * The URL-encoded script definition (instead of using request body)
+     *
+     * @var string
+     */
+    public $script;
+
     /**
      * Explicit timestamp for the document
      *
@@ -40,7 +64,7 @@ class Create extends QueryParamsDocumentAbstract
     public $version;
 
     /**
-     * The document
+     * The request definition using either `script` or partial `doc`
      *
      * @var array
      * @isQueryParameter

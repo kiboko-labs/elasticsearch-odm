@@ -15,10 +15,15 @@
   ],
   "require": {
     "aura/di": "^2.0",
-    "codeliner/array-reader" : "^1.0",
-    "elasticsearch/elasticsearch": "^2.0@beta",
+    "codeliner/array-reader": "^1.0",
+    "doctrine/inflector": "^1.0",
+    "elasticsearch/elasticsearch": "^2.0",
     "jan-swiecki/simple-annotations": "^0.3",
-    "php": ">=5.4.0"
+    "php": ">=5.4.0",
+    "symfony/process": ">=2"
+  },
+  "require-dev": {
+    "monolog/monolog": "*"
   },
   "autoload": {
     "psr-4": {

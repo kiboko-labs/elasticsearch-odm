@@ -8,6 +8,9 @@ use DocBlockReader\Reader;
 use Elasticsearch\Client;
 use Mosiyash\ElasticSearch\Exceptions\InvalidArgumentException;
 use Mosiyash\ElasticSearch\Exceptions\LogicException;
+use Mosiyash\ElasticSearch\QueryParams\Create;
+use Mosiyash\ElasticSearch\QueryParams\Delete;
+use Mosiyash\ElasticSearch\QueryParams\Update;
 
 /**
  * Class DocumentAbstract
@@ -33,9 +36,13 @@ abstract class DocumentAbstract implements DocumentInterface
 
     /**
      * @var string
-     * @isBodyParameter
      */
     public $id;
+
+    /**
+     * @var integer
+     */
+    public $version;
 
     /**
      * @param Container $di
@@ -118,6 +125,7 @@ abstract class DocumentAbstract implements DocumentInterface
 
         $this->isNew = false;
         $this->id = $arrayReader->stringValue('_id');
+        $this->version = $arrayReader->stringValue('_version');
 
         $class = get_class($this);
         $reflection = new \ReflectionClass($class);
@@ -152,10 +160,6 @@ abstract class DocumentAbstract implements DocumentInterface
             }
         }
 
-        if ((string) $data['id'] === '') {
-            unset($data['id']);
-        }
-
         return $data;
     }
 
@@ -169,29 +173,38 @@ abstract class DocumentAbstract implements DocumentInterface
         $client = $this->getClient();
 
         if ($this->isNew()) {
-            $params = [];
-            $body = $this->getBody();
+            $params = new Create($this);
+            $params->body = $this->getBody();
 
-            $params['index'] = $this->getIndex();
-            $params['type'] = $this->getType();
-
-            if (array_key_exists('id', $body)) {
-                $params['id'] = $body['id'];
-                unset($body['id']);
-            }
-
-            $params['body'] = $body;
-
-            $result = $client->create($params);
+            $result = $client->create($params->asArray());
 
             if (array_key_exists('created', $result) && $result['created'] === true) {
                 $this->isNew = false;
                 $this->id = $result['_id'];
+                $this->version = $result['_version'];
             }
 
             return $result;
-        }
+        } else {
+            $params = new Update($this);
+            $params->body['doc'] = $this->getBody();
 
-        return [];
+            $result = $client->update($params->asArray());
+            $this->version = $result['_version'];
+
+            return $result;
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function delete()
+    {
+        $client = $this->getClient();
+        $params = new Delete($this);
+        $result = $client->delete($params->asArray());
+
+        return $result;
     }
 }

@@ -111,13 +111,13 @@ class TestCase extends \PHPUnit_Framework_TestCase
         $this->assertTrue($response['acknowledged']);
     }
 
-    public function assertPromise($expected, callable $do, callable $resolver, $timeout = 5)
+    public function assertPromise($expected, callable $actual, callable $resolver, $timeout = 5)
     {
         $start = microtime(true);
         $runned = true;
 
         while ($runned) {
-            $actual = call_user_func($do);
+            $actual = call_user_func($actual);
             $fail = false;
 
             try {

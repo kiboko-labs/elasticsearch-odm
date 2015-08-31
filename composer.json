@@ -19,11 +19,11 @@
     "doctrine/inflector": "^1.0",
     "elasticsearch/elasticsearch": "^2.0",
     "jan-swiecki/simple-annotations": "^0.3",
-    "php": ">=5.4.0",
-    "symfony/process": ">=2"
+    "php": ">=5.4.0"
   },
   "require-dev": {
-    "monolog/monolog": "*"
+    "monolog/monolog": "*",
+    "symfony/process": ">=2"
   },
   "autoload": {
     "psr-4": {

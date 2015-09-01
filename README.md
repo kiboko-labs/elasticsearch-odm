@@ -92,7 +92,7 @@ di->set('project/elasticsearch:client', function() {
     return $client->build();
 });
 
-$this->di->setter['Mosiyash\ElasticSearch\DocumentAbstract']['setDi'] = $di;
-$this->di->setter['Mosiyash\ElasticSearch\DocumentRepositoryAbstract']['setDi'] = $di;
-$this->di->setter['Mosiyash\ElasticSearch\DocumentRepositoryAbstract']['setClientServiceName'] = 'project/elasticsearch:client';
+$di->setter['Mosiyash\ElasticSearch\DocumentAbstract']['setDi'] = $di;
+$di->setter['Mosiyash\ElasticSearch\DocumentRepositoryAbstract']['setDi'] = $di;
+$di->setter['Mosiyash\ElasticSearch\DocumentRepositoryAbstract']['setClientServiceName'] = 'project/elasticsearch:client';
 ```

@@ -73,6 +73,7 @@ After that you need to supplement your bootstrap to make classes loadable.
 
 ```php
 <?php
+// your bootstrap
 
 use Aura\Di\Container;
 use Aura\Di\Factory;

@@ -10,9 +10,9 @@ Installation via Composer
 
 The recommended method to install _Elasticsearch ODM_ is through [Composer](http://getcomposer.org).
 
-    ```bash
-        composer require mosiyash/elasticsearch-odm:dev-master
-    ```
+```bash
+    composer require mosiyash/elasticsearch-odm:dev-master
+```
 
 Quickstart
 ----------

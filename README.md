@@ -21,74 +21,74 @@ Quickstart
 
 For example, create new model and repository classes:
 
-    ```php
-    // src/Documents/User.php
-    
-    namespace Project/Documents;
-    
-    use Mosiyash\ElasticSearch\DocumentAbstract;
-    
-    class User extends DocumentAbstract
-    {
-        /**
-         * @var string
-         * @isBodyParameter
-         */
-        public $firstname;
-    
-        /**
-         * @var string
-         * @isBodyParameter
-         */
-        public $lastname;
-    }
-    ```
+```php
+// src/Documents/User.php
+
+namespace Project/Documents;
+
+use Mosiyash\ElasticSearch\DocumentAbstract;
+
+class User extends DocumentAbstract
+{
+    /**
+     * @var string
+     * @isBodyParameter
+     */
+    public $firstname;
+
+    /**
+     * @var string
+     * @isBodyParameter
+     */
+    public $lastname;
+}
+```
 
 and
 
-    ```php
-    // src/Documents/UserRepository.php
-    
-    namespace Project/Documents;
-    
-    use Mosiyash\ElasticSearch\DocumentRepositoryAbstract;
-    
-    class UserRepository extends DocumentRepositoryAbstract
+```php
+// src/Documents/UserRepository.php
+
+namespace Project/Documents;
+
+use Mosiyash\ElasticSearch\DocumentRepositoryAbstract;
+
+class UserRepository extends DocumentRepositoryAbstract
+{
+    public function getIndex()
     {
-        public function getIndex()
-        {
-            return 'project';
-        }
-    
-        public function getType()
-        {
-            return 'users';
-        }
+        return 'project';
     }
-    ```
+
+    public function getType()
+    {
+        return 'users';
+    }
+}
+```
 
 After that you need to supplement your bootstrap to make classes loadable.
 
-    ```php
-    use Aura\Di\Container;
-    use Aura\Di\Factory;
-    use Elasticsearch\ClientBuilder;
-    use Monolog\Handler\StreamHandler;
-    use Monolog\Logger;
-    
-    $di = new Container(new Factory());
-    
-    di->set('project/elasticsearch:client', function() {
-        $logger = new Logger('elasticsearch');
-        $logger->pushHandler('/path/to/file.log'), Logger::ERROR);
-    
-        $client = ClientBuilder::create();
-        $client->setLogger($logger);
-    
-        return $client->build();
-    });
-    
-    $this->di->setter['Mosiyash\ElasticSearch\DocumentAbstract']['setDi'] = $di;
-    $this->di->setter['Mosiyash\ElasticSearch\DocumentRepositoryAbstract']['setDi'] = $di;
-    $this->di->setter['Mosiyash\ElasticSearch\DocumentRepositoryAbstract']['setClientServiceName'] = 'project/elasticsearch:client';
-    ```
+```php
+use Aura\Di\Container;
+use Aura\Di\Factory;
+use Elasticsearch\ClientBuilder;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+
+$di = new Container(new Factory());
+
+di->set('project/elasticsearch:client', function() {
+    $logger = new Logger('elasticsearch');
+    $logger->pushHandler('/path/to/file.log'), Logger::ERROR);
+
+    $client = ClientBuilder::create();
+    $client->setLogger($logger);
+
+    return $client->build();
+});
+
+$this->di->setter['Mosiyash\ElasticSearch\DocumentAbstract']['setDi'] = $di;
+$this->di->setter['Mosiyash\ElasticSearch\DocumentRepositoryAbstract']['setDi'] = $di;
+$this->di->setter['Mosiyash\ElasticSearch\DocumentRepositoryAbstract']['setClientServiceName'] = 'project/elasticsearch:client';
+```

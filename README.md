@@ -82,7 +82,7 @@ use Monolog\Logger;
 
 $di = new Container(new Factory());
 
-di->set('project/elasticsearch:client', function() {
+$di->set('project/elasticsearch:client', function() {
     $logger = new Logger('elasticsearch');
     $logger->pushHandler('/path/to/file.log'), Logger::ERROR);
 

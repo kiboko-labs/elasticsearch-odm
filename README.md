@@ -22,6 +22,7 @@ Quickstart
 For example, create new model and repository classes:
 
 ```php
+<?php
 // src/Documents/User.php
 
 namespace Project/Documents;
@@ -47,6 +48,7 @@ class User extends DocumentAbstract
 and
 
 ```php
+<?php
 // src/Documents/UserRepository.php
 
 namespace Project/Documents;
@@ -70,6 +72,8 @@ class UserRepository extends DocumentRepositoryAbstract
 After that you need to supplement your bootstrap to make classes loadable.
 
 ```php
+<?php
+
 use Aura\Di\Container;
 use Aura\Di\Factory;
 use Elasticsearch\ClientBuilder;

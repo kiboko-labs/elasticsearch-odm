@@ -94,7 +94,7 @@ class UserRepository extends DocumentRepositoryAbstract
 }
 ```
 
-``Elasticsearch ODM`` uses ``[Aura.Di](https://github.com/auraphp/Aura.Di/tree/2.x)`` to manage dependencies. Features of this library describes the project page.
+``Elasticsearch ODM`` uses [Aura.Di](https://github.com/auraphp/Aura.Di/tree/2.x) to manage dependencies. Features of this library describes the project page.
 
 So, start writing the bootstrap file.
 

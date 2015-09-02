@@ -5,6 +5,7 @@
     "elasticsearch",
     "elastic"
   ],
+  "description": "Elasticsearch Object Document Mapper is build for PHP 5.4.0+. It is a wrapper for the official elasticsearch/elasticsearch-php client.",
   "homepage": "https://github.com/mosiyash/elasticsearch-odm",
   "license": "BSD-2-Clause",
   "authors": [

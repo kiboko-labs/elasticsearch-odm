@@ -6,7 +6,6 @@ use Aura\Di\Container;
 use Aura\Di\Factory;
 use Elasticsearch\ClientBuilder;
 use Elasticsearch\Common\Exceptions\Missing404Exception;
-use Elasticsearch\ConnectionPool\SniffingConnectionPool;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Symfony\Component\Process\Process;

@@ -1,9 +1,9 @@
 <?php
 
-namespace Mosiyash\ElasticSearch;
+namespace Mosiyash\Elasticsearch;
 
-use Mosiyash\ElasticSearch\QueryParams\Search;
-use Mosiyash\ElasticSearch\Tests\CustomDocumentRepository;
+use Mosiyash\Elasticsearch\QueryParams\Search;
+use Mosiyash\Elasticsearch\Tests\CustomDocumentRepository;
 use React\EventLoop\StreamSelectLoop;
 use React\Promise\Promise;
 use React\Promise\Timer;
@@ -16,7 +16,7 @@ class DocumentRepositoryTest extends TestCase
      */
     protected function newCustomDocument()
     {
-        $document = $this->di->get('tests/documents:custom');
+        $document = $this->di->get('tests/documents:custom')->__invoke();
         $document->id = 'xyz';
         $document->firstname = 'John';
         $document->lastname = 'Doe';
@@ -31,7 +31,7 @@ class DocumentRepositoryTest extends TestCase
      */
     public function getCustomDocumentRepository()
     {
-        return $this->di->get('tests/repositories:custom');
+        return $this->di->get('tests/documents:custom_repository');
     }
 
     public function testFind()
@@ -40,7 +40,7 @@ class DocumentRepositoryTest extends TestCase
         $repository = $this->getCustomDocumentRepository();
 
         $result = $repository->find('xyz');
-        $this->assertInstanceOf('Mosiyash\ElasticSearch\Tests\CustomDocument', $result);
+        $this->assertInstanceOf('Mosiyash\Elasticsearch\Tests\CustomDocument', $result);
         $this->assertFalse($result->isNew());
         $this->assertEquals($document, $result);
 

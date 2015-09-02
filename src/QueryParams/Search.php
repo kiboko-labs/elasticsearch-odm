@@ -1,9 +1,9 @@
 <?php
 
-namespace Mosiyash\ElasticSearch\QueryParams;
+namespace Mosiyash\Elasticsearch\QueryParams;
 
-use Mosiyash\ElasticSearch\DocumentRepositoryInterface;
-use Mosiyash\ElasticSearch\QueryParamsTrait;
+use Mosiyash\Elasticsearch\DocumentRepositoryInterface;
+use Mosiyash\Elasticsearch\QueryParamsTrait;
 
 /**
  * Class QueryParamsSearchAbstract
@@ -26,7 +26,7 @@ use Mosiyash\ElasticSearch\QueryParamsTrait;
  * TODO: add suggestSize property
  * TODO: add suggestText property
  *
- * @package Mosiyash\ElasticSearch\QueryParams
+ * @package Mosiyash\Elasticsearch\QueryParams
  */
 class Search
 {

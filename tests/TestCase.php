@@ -1,13 +1,11 @@
 <?php
 
-namespace Mosiyash\ElasticSearch;
+namespace Mosiyash\Elasticsearch;
 
 use Aura\Di\Container;
 use Aura\Di\Factory;
 use Elasticsearch\ClientBuilder;
 use Elasticsearch\Common\Exceptions\Missing404Exception;
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
 use Symfony\Component\Process\Process;
 
 class TestCase extends \PHPUnit_Framework_TestCase
@@ -20,37 +18,28 @@ class TestCase extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->di = new Container(new Factory());
-        $this->di->set('tests/elasticsearch:client', function() {
-            $logger = new Logger('tests');
-            $logger->pushHandler(new StreamHandler(dirname(__DIR__).'/tmp/log/tests.log'), Logger::DEBUG);
 
-            $client = ClientBuilder::create();
-            $client->setLogger($logger);
+        $this->di->set('tests/elasticsearch:client', $this->di->lazy(function() {
+            return ClientBuilder::create()->build();
+        }));
 
-            return $client->build();
-        });
+        $this->di->setter['Mosiyash\Elasticsearch\DocumentAbstract']['setDi'] = $this->di;
+        $this->di->setter['Mosiyash\Elasticsearch\DocumentRepositoryAbstract']['setDi'] = $this->di;
 
-        $this->di->set('tests/documents:custom', $this->di->lazyNew('Mosiyash\ElasticSearch\Tests\CustomDocument'));
-        $this->di->setter['Mosiyash\ElasticSearch\Tests\CustomDocument']['setRepositoryServiceName'] = 'tests/repositories:custom';
+        $this->di->set('tests/documents:custom', $this->di->newFactory('Mosiyash\Elasticsearch\Tests\CustomDocument'));
+        $this->di->set('tests/documents:custom_repository', $this->di->lazyNew('Mosiyash\Elasticsearch\Tests\CustomDocumentRepository'));
 
-        $this->di->set('tests/repositories:custom', $this->di->lazyNew('Mosiyash\ElasticSearch\Tests\CustomDocumentRepository'));
-
-        $this->di->setter['Mosiyash\ElasticSearch\DocumentAbstract']['setDi'] = $this->di;
-        $this->di->setter['Mosiyash\ElasticSearch\DocumentRepositoryAbstract']['setDi'] = $this->di;
-        $this->di->setter['Mosiyash\ElasticSearch\DocumentRepositoryAbstract']['setClientServiceName'] = 'tests/elasticsearch:client';
-        $this->di->setter['Mosiyash\ElasticSearch\DocumentRepositoryAbstract']['setDocumentClassName'] = 'Mosiyash\ElasticSearch\Tests\CustomDocument';
-
-        $this->checkElasticSearchIsRunned();
-        $this->deleteElasticSearchIndex();
-        $this->createElasticSearchIndex();
+        $this->checkElasticsearchIsRunned();
+        $this->deleteElasticsearchIndex();
+        $this->createElasticsearchIndex();
     }
 
     public function tearDown()
     {
-        $this->deleteElasticSearchIndex();
+        $this->deleteElasticsearchIndex();
     }
 
-    protected function checkElasticSearchIsRunned()
+    protected function checkElasticsearchIsRunned()
     {
         $osname = strtolower(php_uname('s'));
 
@@ -71,7 +60,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
         $this->assertRegExp('/java.+elasticsearch/i', $output);
     }
 
-    protected function deleteElasticSearchIndex()
+    protected function deleteElasticsearchIndex()
     {
         $params = ['index' => 'tests'];
 
@@ -83,7 +72,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
         }
     }
 
-    protected function createElasticSearchIndex()
+    protected function createElasticsearchIndex()
     {
         $params = [
             'index' => 'tests',

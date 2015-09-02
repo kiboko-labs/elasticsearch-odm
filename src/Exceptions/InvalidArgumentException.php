@@ -1,6 +1,6 @@
 <?php
 
-namespace Mosiyash\ElasticSearch\Exceptions;
+namespace Mosiyash\Elasticsearch\Exceptions;
 
 class InvalidArgumentException extends \InvalidArgumentException
 {}

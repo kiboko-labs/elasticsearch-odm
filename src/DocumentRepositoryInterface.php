@@ -1,9 +1,16 @@
 <?php
 
-namespace Mosiyash\ElasticSearch;
+namespace Mosiyash\Elasticsearch;
+
+use Elasticsearch\Client;
 
 interface DocumentRepositoryInterface
 {
+    /**
+     * @return Client
+     */
+    public function getClient();
+
     /**
      * @return string
      */
@@ -13,4 +20,9 @@ interface DocumentRepositoryInterface
      * @return string
      */
     public function getType();
+
+    /**
+     * @return DocumentInterface
+     */
+    public function newDocument();
 }

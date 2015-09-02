@@ -1,21 +1,21 @@
 <?php
 
-namespace Mosiyash\ElasticSearch;
+namespace Mosiyash\Elasticsearch;
 
 use Aura\Di\Container;
 use Codeliner\ArrayReader\ArrayReader;
 use DocBlockReader\Reader;
 use Elasticsearch\Client;
-use Mosiyash\ElasticSearch\Exceptions\InvalidArgumentException;
-use Mosiyash\ElasticSearch\Exceptions\LogicException;
-use Mosiyash\ElasticSearch\QueryParams\Create;
-use Mosiyash\ElasticSearch\QueryParams\Delete;
-use Mosiyash\ElasticSearch\QueryParams\Update;
+use Mosiyash\Elasticsearch\Exceptions\InvalidArgumentException;
+use Mosiyash\Elasticsearch\Exceptions\LogicException;
+use Mosiyash\Elasticsearch\QueryParams\Create;
+use Mosiyash\Elasticsearch\QueryParams\Delete;
+use Mosiyash\Elasticsearch\QueryParams\Update;
 
 /**
  * Class DocumentAbstract
  *
- * @package Mosiyash\ElasticSearch
+ * @package Mosiyash\Elasticsearch
  */
 abstract class DocumentAbstract implements DocumentInterface
 {
@@ -23,11 +23,6 @@ abstract class DocumentAbstract implements DocumentInterface
      * @var Container
      */
     public $di;
-
-    /**
-     * @var string
-     */
-    private $repositoryServiceName;
 
     /**
      * @var bool
@@ -47,29 +42,13 @@ abstract class DocumentAbstract implements DocumentInterface
     /**
      * @param Container $di
      */
-    public function setDi(Container $di)
+    final public function setDi(Container $di)
     {
         if (!is_null($this->di)) {
             throw new LogicException('The container is already bound');
         }
 
         $this->di = $di;
-    }
-
-    /**
-     * @param string $repositoryServiceName
-     */
-    public function setRepositoryServiceName($repositoryServiceName)
-    {
-        $this->repositoryServiceName = $repositoryServiceName;
-    }
-
-    /**
-     * @return DocumentRepositoryInterface
-     */
-    public function getRepository()
-    {
-        return $this->di->get($this->repositoryServiceName);
     }
 
     /**

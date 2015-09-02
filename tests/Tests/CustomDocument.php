@@ -1,11 +1,19 @@
 <?php
 
-namespace Mosiyash\ElasticSearch\Tests;
+namespace Mosiyash\Elasticsearch\Tests;
 
-use Mosiyash\ElasticSearch\DocumentAbstract;
+use Mosiyash\Elasticsearch\DocumentAbstract;
 
 class CustomDocument extends DocumentAbstract
 {
+    /**
+     * @return CustomDocumentRepository
+     */
+    public function getRepository()
+    {
+        return $this->di->get('tests/documents:custom_repository');
+    }
+
     /**
      * @var string
      * @isBodyParameter

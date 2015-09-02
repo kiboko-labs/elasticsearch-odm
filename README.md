@@ -27,7 +27,7 @@ For example, create new model and repository classes:
 
 namespace Project/Documents;
 
-use Mosiyash\ElasticSearch\DocumentAbstract;
+use Mosiyash\Elasticsearch\DocumentAbstract;
 
 class User extends DocumentAbstract
 {
@@ -53,7 +53,7 @@ and
 
 namespace Project/Documents;
 
-use Mosiyash\ElasticSearch\DocumentRepositoryAbstract;
+use Mosiyash\Elasticsearch\DocumentRepositoryAbstract;
 
 class UserRepository extends DocumentRepositoryAbstract
 {
@@ -93,7 +93,9 @@ $di->set('project/elasticsearch:client', function() {
     return $client->build();
 });
 
-$di->setter['Mosiyash\ElasticSearch\DocumentAbstract']['setDi'] = $di;
-$di->setter['Mosiyash\ElasticSearch\DocumentRepositoryAbstract']['setDi'] = $di;
-$di->setter['Mosiyash\ElasticSearch\DocumentRepositoryAbstract']['setClientServiceName'] = 'project/elasticsearch:client';
+$di->setter['Mosiyash\Elasticsearch\DocumentAbstract']['setDi'] = $di;
+$di->setter['Mosiyash\Elasticsearch\DocumentRepositoryAbstract']['setDi'] = $di;
+$di->setter['Mosiyash\Elasticsearch\DocumentRepositoryAbstract']['setClientServiceName'] = 'project/elasticsearch:client';
+
+$di->set('project/documents:user_repository', $di->lazyNew('Project\Documents\UserRepository'));
 ```

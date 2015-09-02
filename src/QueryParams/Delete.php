@@ -1,7 +1,7 @@
 <?php
 
-namespace Mosiyash\ElasticSearch\QueryParams;
-use Mosiyash\ElasticSearch\QueryParamsDocumentAbstract;
+namespace Mosiyash\Elasticsearch\QueryParams;
+use Mosiyash\Elasticsearch\QueryParamsDocumentAbstract;
 
 /**
  * Class Delete
@@ -11,7 +11,7 @@ use Mosiyash\ElasticSearch\QueryParamsDocumentAbstract;
  * TODO: add replication property (specific replication type)
  * TODO: add versionType property (specific version type)
  *
- * @package Mosiyash\ElasticSearch\QueryParams
+ * @package Mosiyash\Elasticsearch\QueryParams
  */
 class Delete extends QueryParamsDocumentAbstract
 {}

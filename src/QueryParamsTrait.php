@@ -1,6 +1,6 @@
 <?php
 
-namespace Mosiyash\ElasticSearch;
+namespace Mosiyash\Elasticsearch;
 
 use DocBlockReader\Reader;
 use Doctrine\Common\Inflector\Inflector;

@@ -1,10 +1,10 @@
 <?php
 
-namespace Mosiyash\ElasticSearch;
+namespace Mosiyash\Elasticsearch;
 
 use Aura\Di\Container;
 use Aura\Di\Factory;
-use Mosiyash\ElasticSearch\Tests\CustomDocument;
+use Mosiyash\Elasticsearch\Tests\CustomDocument;
 
 class DocumentTest extends TestCase
 {
@@ -13,7 +13,7 @@ class DocumentTest extends TestCase
      */
     protected function newCustomDocument()
     {
-        $document = $this->di->get('tests/documents:custom');
+        $document = $this->di->get('tests/documents:custom')->__invoke();
 
         return $document;
     }
@@ -27,7 +27,7 @@ class DocumentTest extends TestCase
         $document->setDi(new Container(new Factory()));
         $this->assertInstanceOf('Aura\Di\Container', $document->di);
 
-        $this->setExpectedException('Mosiyash\ElasticSearch\Exceptions\LogicException', 'The container is already bound');
+        $this->setExpectedException('Mosiyash\Elasticsearch\Exceptions\LogicException', 'The container is already bound');
         $document->setDi(new Container(new Factory()));
     }
 

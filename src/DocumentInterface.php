@@ -1,6 +1,11 @@
 <?php
 
-namespace Mosiyash\ElasticSearch;
+namespace Mosiyash\Elasticsearch;
 
 interface DocumentInterface
-{}
+{
+    /**
+     * @return DocumentRepositoryInterface
+     */
+    public function getRepository();
+}

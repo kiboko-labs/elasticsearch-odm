@@ -1,11 +1,11 @@
 <?php
 
-namespace Mosiyash\ElasticSearch;
+namespace Mosiyash\Elasticsearch;
 
 use Aura\Di\Container;
 use Elasticsearch\Common\Exceptions\Missing404Exception;
-use Mosiyash\ElasticSearch\Exceptions\LogicException;
-use Mosiyash\ElasticSearch\QueryParams\Search;
+use Mosiyash\Elasticsearch\Exceptions\LogicException;
+use Mosiyash\Elasticsearch\QueryParams\Search;
 
 abstract class DocumentRepositoryAbstract implements DocumentRepositoryInterface
 {
@@ -15,49 +15,15 @@ abstract class DocumentRepositoryAbstract implements DocumentRepositoryInterface
     public $di;
 
     /**
-     * @var string
-     */
-    private $clientServiceName;
-
-    /**
-     * @var string
-     */
-    private $documentClassName;
-
-    /**
      * @param Container $di
      */
-    public function setDi(Container $di)
+    final public function setDi(Container $di)
     {
         if (!is_null($this->di)) {
             throw new LogicException('The container is already bound');
         }
 
         $this->di = $di;
-    }
-
-    /**
-     * @param string $clientServiceName
-     */
-    public function setClientServiceName($clientServiceName)
-    {
-        $this->clientServiceName = $clientServiceName;
-    }
-
-    /**
-     * @param string $documentClassName
-     */
-    public function setDocumentClassName($documentClassName)
-    {
-        $this->documentClassName = $documentClassName;
-    }
-
-    /**
-     * @return Client
-     */
-    public function getClient()
-    {
-        return $this->di->get($this->clientServiceName);
     }
 
     /**
@@ -78,7 +44,7 @@ abstract class DocumentRepositoryAbstract implements DocumentRepositoryInterface
             return null;
         }
 
-        $document = $this->di->newInstance($this->documentClassName);
+        $document = $this->newDocument();
         $document->fillThroughElasticsearchResponse($result);
 
         return $document;
@@ -94,7 +60,7 @@ abstract class DocumentRepositoryAbstract implements DocumentRepositoryInterface
         $result = $this->getClient()->search($params->asArray());
 
         foreach ($result['hits']['hits'] as $hit) {
-            $document = $this->di->newInstance($this->documentClassName);
+            $document = $this->newDocument();
             $document->fillThroughElasticsearchResponse($hit);
             $data[] = $document;
         }

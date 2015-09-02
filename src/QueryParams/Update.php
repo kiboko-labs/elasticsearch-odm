@@ -1,7 +1,7 @@
 <?php
 
-namespace Mosiyash\ElasticSearch\QueryParams;
-use Mosiyash\ElasticSearch\QueryParamsDocumentAbstract;
+namespace Mosiyash\Elasticsearch\QueryParams;
+use Mosiyash\Elasticsearch\QueryParamsDocumentAbstract;
 
 /**
  * Class Update
@@ -12,7 +12,7 @@ use Mosiyash\ElasticSearch\QueryParamsDocumentAbstract;
  * TODO: add versionType property (specific version type)
  * TODO: add retryOnConflict property (specify how many times should the operation be retried when a conflict occurs)
  *
- * @package Mosiyash\ElasticSearch\QueryParams
+ * @package Mosiyash\Elasticsearch\QueryParams
  */
 class Update extends QueryParamsDocumentAbstract
 {

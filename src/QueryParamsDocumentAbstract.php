@@ -1,6 +1,6 @@
 <?php
 
-namespace Mosiyash\ElasticSearch;
+namespace Mosiyash\Elasticsearch;
 
 abstract class QueryParamsDocumentAbstract
 {

@@ -152,7 +152,6 @@ $user->version;   // return 1
 $user->id;        // return 'AU9fUbhkk3sUEJdq9IQh'
 $user->firstname; // return 'John'
 $user->lastname;  // return null
-```
 
 // Update User
 $user->id = 1;
@@ -167,6 +166,7 @@ $user->lastname;  // return 'Doe'
 
 // Delete User
 $user->delete();
+```
 
 ### Base repository feautures
 

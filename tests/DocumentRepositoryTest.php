@@ -4,10 +4,6 @@ namespace Mosiyash\Elasticsearch;
 
 use Mosiyash\Elasticsearch\QueryParams\Search;
 use Mosiyash\Elasticsearch\Tests\CustomDocumentRepository;
-use React\EventLoop\StreamSelectLoop;
-use React\Promise\Promise;
-use React\Promise\Timer;
-use React\Promise\Deferred;
 
 class DocumentRepositoryTest extends TestCase
 {

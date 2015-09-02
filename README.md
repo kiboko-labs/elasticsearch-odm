@@ -209,3 +209,12 @@ $result[0]->id;        // return 2
 $result[0]->firstname; // return 'John'
 $result[0]->lastname;  // return null
 ```
+
+Tests
+=====
+
+Run from project root:
+
+```bash
+$ phpunit
+```

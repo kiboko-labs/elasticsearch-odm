@@ -82,4 +82,15 @@ class Mapper
             ? $warmers[$this->document->getRepository()->getIndex()]['warmers']
             : [];
     }
+
+    public function validateDocumentMapping(DocumentInterface $document)
+    {
+        $mappings = $this->getMappings();
+
+        if (!array_key_exists($document->getType(), $mappings)) {
+            return false;
+        }
+
+        return (bool) ($mappings[$document->getType()] === $document->getMapping());
+    }
 }

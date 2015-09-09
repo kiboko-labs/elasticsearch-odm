@@ -72,8 +72,14 @@ class MapperTest extends TestCase
         $this->assertSame([], $warmers);
     }
 
-    public function testCheck()
+    public function testValidateDocumentMapping()
     {
         $mapper = $this->di->get('tests/mapper');
+        $document = $this->di->get('tests/documents:custom')->__invoke();
+        $this->assertTrue($mapper->validateDocumentMapping($document));
+
+        $mock = $this->getMockBuilder('Mosiyash\Elasticsearch\Tests\CustomDocument')->getMock();
+        $mock->expects($this->once())->method('getMapping')->will($this->returnValue(['properties' => []]));
+        $this->assertTrue($mapper->validateDocumentMapping($mock));
     }
 }

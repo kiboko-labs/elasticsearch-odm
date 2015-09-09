@@ -3,9 +3,29 @@
 namespace Mosiyash\Elasticsearch\Tests;
 
 use Mosiyash\Elasticsearch\DocumentAbstract;
+use Mosiyash\Elasticsearch\Mapping;
 
 class CustomDocument extends DocumentAbstract
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function getMapping()
+    {
+        return [
+            'properties' => [
+                'firstname' => [
+                    'type' => 'string',
+                    'index' => 'not_analyzed',
+                ],
+                'lastname' => [
+                    'type' => 'string',
+                    'index' => 'not_analyzed',
+                ],
+            ],
+        ];
+    }
+
     /**
      * @return CustomDocumentRepository
      */

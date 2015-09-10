@@ -2,7 +2,7 @@
 
 namespace Mosiyash\Elasticsearch;
 
-class Mapper
+class DocumentMapper
 {
     /**
      * @var DocumentInterface
@@ -20,7 +20,7 @@ class Mapper
     /**
      * @return array
      */
-    final public function getAliases()
+    public function getAliases()
     {
         $client = $this->document->getRepository()->getClient();
 
@@ -37,7 +37,7 @@ class Mapper
     /**
      * @return array
      */
-    final public function getMappings()
+    public function getMapping()
     {
         $client = $this->document->getRepository()->getClient();
 
@@ -46,8 +46,8 @@ class Mapper
             'type' => $this->document->getRepository()->getType(),
         ]);
 
-        return isset($mappings[$this->document->getRepository()->getIndex()]['mappings'])
-            ? $mappings[$this->document->getRepository()->getIndex()]['mappings']
+        return isset($mappings[$this->document->getRepository()->getIndex()]['mappings'][$this->document->getRepository()->getType()])
+            ? $mappings[$this->document->getRepository()->getIndex()]['mappings'][$this->document->getRepository()->getType()]
             : [];
     }
 
@@ -83,14 +83,11 @@ class Mapper
             : [];
     }
 
-    public function validateDocumentMapping(DocumentInterface $document)
+    /**
+     * @return bool
+     */
+    public function validateMapping()
     {
-        $mappings = $this->getMappings();
-
-        if (!array_key_exists($document->getType(), $mappings)) {
-            return false;
-        }
-
-        return (bool) ($mappings[$document->getType()] === $document->getMapping());
+        return (bool) ($this->getMapping() === $this->document->getMapping());
     }
 }

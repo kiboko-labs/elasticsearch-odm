@@ -90,4 +90,44 @@ class DocumentMapper
     {
         return (bool) ($this->getMapping() === $this->document->getMapping());
     }
+
+    /**
+     * @return bool
+     */
+    public function updateMapping()
+    {
+        if ($this->validateMapping()) {
+            return false;
+        }
+
+        $client = $this->document->getRepository()->getClient();
+
+        $response = $client->indices()->deleteMapping([
+            'index' => $this->document->getRepository()->getIndex(),
+            'type' => $this->document->getRepository()->getType(),
+        ]);
+
+        if ( ! array_key_exists('acknowledged', $response) || $response['acknowledged'] !== true) {
+            throw new \RuntimeException('Couldn\'t delete mapping');
+        }
+
+        $params = [
+            'index' => $this->document->getRepository()->getIndex(),
+            'type' =>  $this->document->getRepository()->getType(),
+            'body' => [
+                $this->document->getRepository()->getType() => array_merge(
+                    ['enabled' => true],
+                    $this->document->getMapping()
+                ),
+            ],
+        ];
+
+        $response = $client->indices()->putMapping($params);
+
+        if ( ! array_key_exists('acknowledged', $response) || $response['acknowledged'] !== true) {
+            throw new \RuntimeException('Couldn\'t create mapping');
+        }
+
+        return true;
+    }
 }

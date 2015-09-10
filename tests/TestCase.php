@@ -36,7 +36,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
-        $this->deleteElasticsearchIndex();
+        // $this->deleteElasticsearchIndex();
     }
 
     protected function checkElasticsearchIsRunned()

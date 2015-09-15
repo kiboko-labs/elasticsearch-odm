@@ -15,6 +15,11 @@ abstract class DocumentRepositoryAbstract implements DocumentRepositoryInterface
     public $di;
 
     /**
+     * @var null|array
+     */
+    private $lastResult;
+
+    /**
      * @param Container $di
      */
     final public function setDi(Container $di)
@@ -24,6 +29,14 @@ abstract class DocumentRepositoryAbstract implements DocumentRepositoryInterface
         }
 
         $this->di = $di;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getLastResult()
+    {
+        return $this->lastResult;
     }
 
     /**
@@ -39,13 +52,13 @@ abstract class DocumentRepositoryAbstract implements DocumentRepositoryInterface
         ];
 
         try {
-            $result = $this->getClient()->get($params);
+            $this->lastResult = $this->getClient()->get($params);
         } catch (Missing404Exception $e) {
             return null;
         }
 
         $document = $this->newDocument();
-        $document->fillThroughElasticsearchResponse($result);
+        $document->fillThroughElasticsearchResponse($this->lastResult);
 
         return $document;
     }
@@ -57,9 +70,9 @@ abstract class DocumentRepositoryAbstract implements DocumentRepositoryInterface
     public function findBy(Search $params)
     {
         $data = [];
-        $result = $this->getClient()->search($params->asArray());
+        $this->lastResult = $this->getClient()->search($params->asArray());
 
-        foreach ($result['hits']['hits'] as $hit) {
+        foreach ($this->lastResult['hits']['hits'] as $hit) {
             $document = $this->newDocument();
             $document->fillThroughElasticsearchResponse($hit);
             $data[] = $document;

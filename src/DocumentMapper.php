@@ -41,10 +41,14 @@ class DocumentMapper
     {
         $client = $this->document->getRepository()->getClient();
 
-        $mappings = $client->indices()->getMapping([
-            'index' => $this->document->getRepository()->getIndex(),
-            'type' => $this->document->getRepository()->getType(),
-        ]);
+        try {
+            $mappings = $client->indices()->getMapping([
+                'index' => $this->document->getRepository()->getIndex(),
+                'type' => $this->document->getRepository()->getType(),
+            ]);
+        } catch (Missing404Exception $e) {
+            return [];
+        }
 
         return isset($mappings[$this->document->getRepository()->getIndex()]['mappings'][$this->document->getRepository()->getType()])
             ? $mappings[$this->document->getRepository()->getIndex()]['mappings'][$this->document->getRepository()->getType()]

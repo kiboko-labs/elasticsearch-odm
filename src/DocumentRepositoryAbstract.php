@@ -25,7 +25,7 @@ abstract class DocumentRepositoryAbstract implements DocumentRepositoryInterface
     final public function setDi(Container $di)
     {
         if (!is_null($this->di)) {
-            throw new LogicException('The container is already bound');
+            throw new LogicException('The container is already bounded');
         }
 
         $this->di = $di;

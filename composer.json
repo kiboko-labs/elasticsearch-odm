@@ -20,9 +20,11 @@
     "doctrine/inflector": "^1.0",
     "elasticsearch/elasticsearch": "^2.0",
     "jan-swiecki/simple-annotations": "^0.3",
-    "php": ">=5.4.0"
+    "php": ">=5.4.0",
+    "sebastian/comparator": "~1.2"
   },
   "require-dev": {
+    "sebastian/diff": "*",
     "symfony/process": ">=2"
   },
   "autoload": {

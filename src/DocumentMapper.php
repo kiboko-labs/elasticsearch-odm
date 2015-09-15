@@ -3,6 +3,8 @@
 namespace Mosiyash\Elasticsearch;
 
 use Elasticsearch\Common\Exceptions\Missing404Exception;
+use SebastianBergmann\Comparator\ComparisonFailure;
+use SebastianBergmann\Comparator\Factory;
 
 class DocumentMapper
 {
@@ -90,11 +92,23 @@ class DocumentMapper
     }
 
     /**
+     * @todo Make correct validation
      * @return bool
      */
     public function validateMapping()
     {
-        return (bool) ($this->getMapping() === $this->document->getMapping());
+        $mapperMapping = $this->getMapping();
+        $documentMapping = $this->document->getMapping();
+
+        $factory = new Factory();
+        $comparator = $factory->getComparatorFor($mapperMapping, $documentMapping);
+
+        try {
+            $comparator->assertEquals($mapperMapping, $documentMapping);
+            return true;
+        } catch (ComparisonFailure $e) {
+            return false;
+        }
     }
 
     /**

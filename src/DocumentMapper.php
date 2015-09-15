@@ -122,19 +122,6 @@ class DocumentMapper
 
         $client = $this->document->getRepository()->getClient();
 
-        try {
-            $response = $client->indices()->deleteMapping([
-                'index' => $this->document->getRepository()->getIndex(),
-                'type' => $this->document->getRepository()->getType(),
-            ]);
-
-            if (!array_key_exists('acknowledged', $response) || $response['acknowledged'] !== true) {
-                throw new \RuntimeException('Couldn\'t delete mapping');
-            }
-        } catch (Missing404Exception $e) {
-            // Index not exists
-        }
-
         $params = [
             'index' => $this->document->getRepository()->getIndex(),
             'type' =>  $this->document->getRepository()->getType(),
